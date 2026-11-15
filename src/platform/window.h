@@ -20,6 +20,10 @@ public:
     // True once after the client area changed size.
     bool consumeResized();
 
+    // Called first for every message (e.g. the ImGui overlay). Returning true marks it handled.
+    using MessageHook = bool (*)(HWND, UINT, WPARAM, LPARAM);
+    void setMessageHook(MessageHook hook) { hook_ = hook; }
+
     HWND hwnd() const { return hwnd_; }
     uint32_t width() const { return width_; }
     uint32_t height() const { return height_; }
@@ -30,6 +34,7 @@ private:
     LRESULT handleMessage(UINT msg, WPARAM wp, LPARAM lp);
 
     HWND hwnd_ = nullptr;
+    MessageHook hook_ = nullptr;
     uint32_t width_ = 0;
     uint32_t height_ = 0;
     bool resized_ = false;

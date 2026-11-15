@@ -69,6 +69,7 @@ LRESULT CALLBACK Window::wndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 }
 
 LRESULT Window::handleMessage(UINT msg, WPARAM wp, LPARAM lp) {
+    if (hook_ && hook_(hwnd_, msg, wp, lp)) return 1;
     switch (msg) {
     case WM_SIZE:
         width_ = LOWORD(lp);

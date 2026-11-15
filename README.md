@@ -73,17 +73,18 @@ results/                        benchmark output: m0/, A/, B/, R/ (only .md repo
 
 ## Usage
 
-Implemented so far (T1: window, device, swap chain, clear):
+Implemented so far (T1: window, device, swap chain, clear; T2: CPU/GPU timing + ImGui stats overlay):
 
 ```sh
-m0                                      # clear the window every frame; Esc to quit
-m0 --frames 300                         # exit after 300 frames (smoke test)
+m0                                      # clear the window, stats overlay top-left; Esc to quit
+m0 --frames 300                         # exit after 300 frames (smoke test), print average timings
 m0 --no-debug-layer                     # run without the D3D12 debug layer
+m0 --no-vsync                           # present without vsync (tearing, if supported)
 ```
 
-Exit code is non-zero if the debug layer reported any error or warning.
+The overlay shows the mean and max of the last 60 frames: CPU frame, CPU work, fence wait, GPU frame, and GPU time per pass (`Clear`, `Overlay`). GPU times come from timestamp queries and are 2 frames old. Exit code is non-zero if the debug layer reported any error or warning.
 
-Planned (T2–T7):
+Planned (T3–T7):
 
 ```sh
 m0                                      # interactive: free-fly camera + live stats

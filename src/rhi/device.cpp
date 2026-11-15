@@ -1,5 +1,7 @@
 #include "rhi/device.h"
 
+#include "platform/clock.h"
+
 #include <cstdio>
 #include <stdexcept>
 #include <vector>
@@ -143,7 +145,9 @@ Device::~Device() {
 }
 
 ID3D12GraphicsCommandList* Device::beginFrame() {
+    const int64_t waitStart = clockNow();
     waitForFenceValue(slotFenceValues_[slot_]);
+    lastFenceWaitMs_ = clockMs(waitStart, clockNow());
     check(allocators_[slot_]->Reset(), "ID3D12CommandAllocator::Reset");
     check(cmd_->Reset(allocators_[slot_].Get(), nullptr), "ID3D12GraphicsCommandList::Reset");
     backBufferIndex_ = swapChain_->GetCurrentBackBufferIndex();

@@ -48,6 +48,13 @@ public:
     // Full path of the D3D12Core.dll actually loaded (shows whether the Agility SDK is in use).
     const std::string& runtimePath() const { return runtimePath_; }
 
+    ID3D12Device* d3d() const { return device_.Get(); }
+    ID3D12CommandQueue* queue() const { return queue_.Get(); }
+    // Frame slot being recorded, valid between beginFrame and endFrame.
+    uint32_t frameSlot() const { return slot_; }
+    // How long the last beginFrame blocked waiting for its slot's fence.
+    double lastFenceWaitMs() const { return lastFenceWaitMs_; }
+
 private:
     void createBackBufferViews();
     void waitForFenceValue(uint64_t value);
@@ -68,6 +75,7 @@ private:
     uint64_t lastSignaled_ = 0;
     uint64_t slotFenceValues_[kFramesInFlight] = {};
     uint32_t slot_ = 0;
+    double lastFenceWaitMs_ = 0.0;
     uint32_t backBufferIndex_ = 0;
     uint32_t rtvStride_ = 0;
     bool tearingSupported_ = false;
