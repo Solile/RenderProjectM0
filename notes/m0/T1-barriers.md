@@ -1,0 +1,11 @@
+- barrier 是什么：同一个资源在两种用法之间的交接（不同命令流之间的同步是 fence，见下）
+- 为什么需要它：因为不同的部件有各自的cache，内存布局和压缩格式也不一样。所以在用法切换时，GPU有必要做交接。
+- barrier 和 fence 的区别：
+  - barrier：同一个资源在两种用法之间的交接，比如"被画"→"被显示"。录在命令列表里，GPU 执行到这一条时才做交接。T1 的 ① 和 ② 都录在**同一个命令列表**里。
+  - fence：不同执行者之间的同步，CPU ↔ GPU，或者队列 ↔ 队列。T1 里 CPU 要等 GPU 做完某一帧，才能复用那一帧的命令分配器，用的就是 fence（`src/rhi/device.cpp` 的 `waitForFenceValue`）。路线 B 的 B2（异步计算）会手写跨队列 fence。
+  - 一句话：barrier 管"资源怎么用"，fence 管"谁等谁"。
+- 少了 barrier ① -> [交给渲染管线]，debug layer 说：
+  - [d3d12 ERROR] ID3D12CommandQueue1::ExecuteCommandLists: Using ClearRenderTargetView on Command List (0x00000220B394CCF0:'Unnamed ID3D12GraphicsCommandList Object'): Resource state (0x0: D3D12_RESOURCE_STATE_[COMMON|PRESENT]) of resource (0x00000220B39272E0:'Unnamed ID3D12Resource Object') (subresource: 0) is invalid for use as a render target.  Expected State Bits (all): 0x4: D3D12_RESOURCE_STATE_RENDER_TARGET, Actual State: 0x0: D3D12_RESOURCE_STATE_[COMMON|PRESENT], Missing State: 0x4: D3D12_RESOURCE_STATE_RENDER_TARGET.
+- 少了 barrier ②-> [交还显示引擎]，debug layer 说：
+  - [d3d12 ERROR] ID3D12CommandQueue1::ExecuteCommandLists: Using IDXGISwapChain::Present on Command List (0x00000220B390B860:'Internal DXGI CommandList'): Resource state (0x4: D3D12_RESOURCE_STATE_RENDER_TARGET) of resource (0x00000220B3937FE0:'Unnamed ID3D12Resource Object') (subresource: 0) is invalid for use as a PRESENT_SOURCE. Expected State Bits (all): 0x0: D3D12_RESOURCE_STATE_[COMMON|PRESENT], Actual State: 0x4: D3D12_RESOURCE_STATE_RENDER_TARGET, Missing State: 0x0: D3D12_RESOURCE_STATE_[COMMON|PRESENT].
+- 

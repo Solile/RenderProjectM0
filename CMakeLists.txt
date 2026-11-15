@@ -16,8 +16,7 @@ add_executable(m0
   src/app/main.cpp
   src/platform/window.cpp
   src/rhi/device.cpp
-  # PLACEHOLDER (DESIGN §9): replace with src/rhi/barriers.cpp once the owner's version exists.
-  src/rhi/barriers_placeholder.cpp
+  src/rhi/barriers.cpp
 )
 
 target_include_directories(m0 PRIVATE src)
