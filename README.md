@@ -40,14 +40,16 @@ Suggested order: M0 → A1 → A2 → (A3 ∥ R1) → then a second active track
 
 ## Build
 
-Requires a C++20 compiler, CMake, and Ninja. Primary setup is MinGW-w64 GCC (see `ENVIRONMENT.md`); the same CMake project also builds with Visual Studio / MSVC.
+Requires MinGW-w64 GCC (C++20), CMake, and Ninja; see `ENVIRONMENT.md`. MSVC isn't supported yet (the CMake flags are GCC-only). Build from the MSYS2 UCRT64 shell, or with its `ucrt64/bin` first on `PATH`:
 
 ```sh
-cmake -S . -B build -G Ninja
-cmake --build build
+cmake -S . -B build -G Ninja    # also downloads the pinned D3D12 Agility SDK
+cmake --build build             # -> build/m0.exe + build/D3D12/ (Agility runtime)
 ```
 
-Fetch the test scene first:
+The D3D12 debug layer also needs the Windows **Graphics Tools** optional feature (admin). Without it, run with `--no-debug-layer`.
+
+From T3 on, fetch the test scene first:
 
 ```sh
 python tools/fetch_assets.py
@@ -70,6 +72,18 @@ results/                        benchmark output: m0/, A/, B/, R/ (only .md repo
 ```
 
 ## Usage
+
+Implemented so far (T1: window, device, swap chain, clear):
+
+```sh
+m0                                      # clear the window every frame; Esc to quit
+m0 --frames 300                         # exit after 300 frames (smoke test)
+m0 --no-debug-layer                     # run without the D3D12 debug layer
+```
+
+Exit code is non-zero if the debug layer reported any error or warning.
+
+Planned (T2–T7):
 
 ```sh
 m0                                      # interactive: free-fly camera + live stats
