@@ -1,68 +1,59 @@
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-*.so.*
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
-# Build directories
+# ── Build output ──────────────────────────────────────────────
 build/
-Build/
-build-*/
+out/
+cmake-build-*/
+install/
 
-# CMake generated files
-CMakeFiles/
+# CMake / Ninja scratch
 CMakeCache.txt
+CMakeFiles/
 cmake_install.cmake
-Makefile
-install_manifest.txt
+*.ninja
+.ninja_deps
+.ninja_log
 compile_commands.json
 
-# Temporary files
-*.tmp
-*.log
-*.bak
-*.swp
+# ── Compiled binaries & intermediates ─────────────────────────
+*.exe
+*.dll
+*.obj
+*.o
+*.lib
+*.a
+*.pdb
+*.ilk
+*.exp
+# compiled shader blobs (shaders are compiled at build/run time)
+*.cso
 
-# vcpkg
-vcpkg_installed/
+# ── Fetched assets (pulled by tools/fetch_assets.py, not committed) ──
+assets/
+!assets/.gitkeep
 
-# debug information files
-*.dwo
+# ── Benchmark output (not committed, except .md reports) ──
+# results/m0/, results/A/, results/B/. Ignore files, not the directory,
+# so the negation below can re-include reports.
+results/**
+!results/**/
+!results/**/*.md
 
-# test output & cache
-Testing/
-.cache/
+# ── Screen captures (golden/ IS committed; ad-hoc captures are not) ──
+captures/
+
+# ── IDE / editor ──────────────────────────────────────────────
+.vs/
+.vscode/
+*.user
+*.sln
+*.vcxproj*
+
+# ── Python tooling ────────────────────────────────────────────
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# ── OS cruft ──────────────────────────────────────────────────
+Thumbs.db
+Desktop.ini
+.DS_Store
